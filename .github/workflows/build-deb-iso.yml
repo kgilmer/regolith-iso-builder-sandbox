@@ -1,7 +1,9 @@
 name: ISO Builder Regolith Image
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'     # (optional) only tags starting with "v"
 
 jobs:
   build:
@@ -19,25 +21,26 @@ jobs:
         id: build_image
         working-directory: .github/scripts
         run: |
-          sudo ./gen-debootstick.sh
+          sudo ./gen-debootstick.sh $RUNNER_TEMP
+          set -e
+          set -x
+          IMAGE_FILE=$(find $RUNNER_TEMP -maxdepth 1 -name "regolith-3_3-trixie-*.img")
+          ZIP_FILE_NAME="${IMAGE_FILE}.zip"
+          zip -j "$ZIP_FILE_NAME" "$IMAGE_FILE"
+          echo "ZIP_FILE=$ZIP_FILE_NAME" >> $GITHUB_ENV
 
-      - name: Prepare asset
-        id: prep_asset
+      - name: debug
         run: |
-          IMAGE_FILE=$(find . -maxdepth 1 -name "*.img")
-          IMAGE_PATH=".github/scripts/$IMAGE_FILE"
-          ZIP_FILE_NAME="${IMAGE_FILE%.img}.zip"
-          zip -j "$ZIP_FILE_NAME" "$IMAGE_PATH"
-          echo "ZIP_FILE=$ZIP_FILE_NAME" >> $GITHUB_OUTPUT
+          find . -maxdepth 1
+          file ${{ env.ZIP_FILE }}
 
-      - name: Create Release
+      - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: debootstick-${{ github.run_id }}-${{ github.run_attempt }}
           name: "Debootstick Image Build ${{ github.run_id }}"
-          body: "Regolith debootstick image generated from manual workflow run."
-          files: "${{ steps.prep_asset.outputs.ZIP_FILE }}"
-
+          tag_name: R${{ github.run_id }}
+          files: |
+            ${{ env.ZIP_FILE }}
 defaults:
   run:
     shell: bash
