@@ -3,8 +3,15 @@
 set -e
 set -o errexit
 
+TARGET_DIR=$1
+
+if [ -z $TARGET_DIR ]; then
+    TARGET_DIR="./"
+fi
+    
+
 TIMESTAMP=$(date +%s)
-CHROOT=./image-root-$TIMESTAMP
+CHROOT="$TARGET_DIR/image-root-$TIMESTAMP"
 IMAGE_NAME=regolith-3_3-trixie-$TIMESTAMP.img
 
 if [ -d $CHROOT ]; then
@@ -26,14 +33,14 @@ mount -t devpts devpts $CHROOT/dev/pts
 echo "root:boot" | chroot $CHROOT chpasswd
 cp gen-debootstick-rootfs.sh $CHROOT
 chroot $CHROOT ./gen-debootstick-rootfs.sh
-rm $CHROOT/gen-debootstick-rootfs.sh
 
 # Cleanup after exit
+rm $CHROOT/gen-debootstick-rootfs.sh
 umount -l $CHROOT/proc || true
 umount -l $CHROOT/sys || true
 umount -l $CHROOT/dev/pts || true
 umount -l $CHROOT/dev || true
 
-debootstick $CHROOT $IMAGE_NAME
+debootstick "$CHROOT" "$TARGET_DIR/$IMAGE_NAME"
 
-echo "Ready to write $IMAGE_NAME to device"
+echo "$TARGET_DIR/$IMAGE_NAME is ready to boot"

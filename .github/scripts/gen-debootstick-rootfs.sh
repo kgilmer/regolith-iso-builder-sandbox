@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-set -x
+set -o errexit
 
 
 # Configure hostname
@@ -27,7 +27,4 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Complete dependency set
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox gnome-terminal 
-
-# Remove yourself
-rm inner.sh
+DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox-esr gnome-terminal network-manager
