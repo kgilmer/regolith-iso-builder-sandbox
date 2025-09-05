@@ -1,17 +1,19 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== Initial System Setup ==="
-read -p "Enter new username: " NEWUSER
-read -s -p "Enter password for $NEWUSER: " NEWPASS
-echo
-read -s -p "Confirm password: " CONFIRM
-echo
+set -x
 
-if [ "$NEWPASS" != "$CONFIRM" ]; then
-    echo "Passwords do not match. Reboot and try again."
-    exit 1
-fi
+printf "=== Initial System Setup ==="
+while :; do
+    read -p "Enter a username: " NEWUSER
+    printf '\n'
+    read -s -p "Enter a password for $NEWUSER: " NEWPASS
+    printf '\n'
+    read -s -p "Confirm the password: " CONFIRM
+    printf '\n'
+    [ "$NEWPASS" == "$CONFIRM" ] && break
+    echo "Passwords do not match. Please try again."
+done
 
 # Create the user
 useradd -m -s /bin/bash "$NEWUSER"
