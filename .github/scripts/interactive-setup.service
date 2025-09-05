@@ -1,0 +1,15 @@
+[Unit]
+Description=Interactive Setup
+DefaultDependencies=no
+After=systemd-user-sessions.service
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/interactive-setup.sh
+ExecStartPost=/bin/systemctl disable interactive-setup.service
+StandardInput=tty
+TTYPath=/dev/tty1
+
+[Install]
+WantedBy=multi-user.target

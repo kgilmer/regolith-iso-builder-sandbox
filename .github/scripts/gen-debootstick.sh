@@ -21,6 +21,10 @@ fi
 
 debootstrap --arch=amd64 --variant=minbase trixie $CHROOT
 
+# Temporary, package these files (TODO)
+cp ./interactive-setup.sh $CHROOT/usr/bin/
+cp ./interactive-setup.service $CHROOT/etc/systemd/system
+
 # Mount required filesystems
 mount -t proc /proc $CHROOT/proc
 mount --rbind /sys  $CHROOT/sys

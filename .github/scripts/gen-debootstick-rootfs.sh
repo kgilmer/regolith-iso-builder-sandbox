@@ -2,10 +2,11 @@
 set -e
 set -o errexit
 
-
-# Configure hostname
+# Configure System
 
 echo "seed" > /etc/hostname
+sudo chmod +x /usr/bin/interactive-setup.sh
+sudo systemctl enable interactive-setup.service
 
 # Base dependencies
 
@@ -21,6 +22,7 @@ wget -qO - https://archive.regolith-desktop.com/regolith.key | gpg --dearmor | t
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://archive.regolith-desktop.com/debian/unstable trixie main" > /etc/apt/sources.list.d/regolith.list
 
 apt update
+
 # Locale generation
 
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
