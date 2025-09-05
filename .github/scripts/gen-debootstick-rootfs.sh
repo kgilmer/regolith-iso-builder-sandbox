@@ -29,4 +29,4 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Complete dependency set
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox-esr gnome-terminal network-manager sudo
+DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox-esr gnome-terminal network-manager sudo zenity less htop
