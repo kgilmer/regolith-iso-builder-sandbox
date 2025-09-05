@@ -2,18 +2,18 @@
 set -e
 set -o errexit
 
-# Configure System
-
-echo "seed" > /etc/hostname
-chmod +x /usr/bin/interactive-setup.sh
-systemctl enable interactive-setup.service
-
 # Base dependencies
 
 echo "deb https://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list
 
 apt update
-DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade --no-install-recommends wget pgp locales
+DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade --no-install-recommends wget pgp locales systemd
+
+# Configure System
+
+echo "seed" > /etc/hostname
+chmod +x /usr/bin/interactive-setup.sh
+systemctl enable interactive-setup.service
 
 # Regolith Deb Repo 
 
