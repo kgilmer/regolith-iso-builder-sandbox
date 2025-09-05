@@ -7,7 +7,12 @@ set -o errexit
 echo "deb https://deb.debian.org/debian trixie main contrib non-free non-free-firmware" > /etc/apt/sources.list
 
 apt update
-DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade --no-install-recommends wget pgp locales systemd
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade --no-install-recommends \
+    locales \
+    pgp \
+    systemd \
+    wget
 
 # Configure System
 
@@ -29,4 +34,22 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Complete dependency set
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox-esr gnome-terminal network-manager sudo zenity less htop
+DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
+    firefox-esr \
+    firmware-ath9k-htc \
+    firmware-iwlwifi \
+    firmware-linux \
+    gnome-terminal \
+    htop \
+    less \
+    lightdm \
+    lightdm-gtk-greeter \
+    network-manager \
+    regolith-desktop \
+    regolith-lightdm-config \
+    regolith-look-lascaille \
+    regolith-session-flashback \
+    regolith-session-sway \
+    sudo \
+    vim \
+    zenity
