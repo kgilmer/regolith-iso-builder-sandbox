@@ -20,11 +20,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y debootstrap debootstick zip
 
-      - name: Build image
+      - name: Build
         id: build_image
         working-directory: .github/scripts
         run: |
-          sudo ./gen-debootstick.sh $RUNNER_TEMP
+          sudo ./gen-debootstick.sh $RUNNER_TEMP ${{ github.ref_name }}
           set -e
           set -x
           IMAGE_FILE=$(find $RUNNER_TEMP -maxdepth 1 -name "regolith-3_3-trixie-*.img")
@@ -32,16 +32,11 @@ jobs:
           zip -j "$ZIP_FILE_NAME" "$IMAGE_FILE"
           echo "ZIP_FILE=$ZIP_FILE_NAME" >> $GITHUB_ENV
 
-      - name: debug
-        run: |
-          find . -maxdepth 1
-          file ${{ env.ZIP_FILE }}
-
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Debootstick Image Build ${{ github.run_id }}"
-          tag_name: R${{ github.run_id }}
+          name: "Debootstick Image Build ${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
           files: |
             ${{ env.ZIP_FILE }}
 defaults:

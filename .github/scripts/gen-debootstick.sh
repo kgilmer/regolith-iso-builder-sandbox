@@ -4,15 +4,18 @@ set -e
 set -o errexit
 
 TARGET_DIR=$1
+RELEASE_LABEL=$2
 
 if [ -z $TARGET_DIR ]; then
     TARGET_DIR="./"
 fi
-    
 
-TIMESTAMP=$(date +%s)
-CHROOT="$TARGET_DIR/image-root-$TIMESTAMP"
-IMAGE_NAME=regolith-3_3-trixie-$TIMESTAMP.img
+if [ -z $RELEASE_LABEL ]; then
+    RELEASE_LABEL=$(date +%s)
+fi
+
+CHROOT="$TARGET_DIR/image-root-$RELEASE_LABEL"
+IMAGE_NAME=regolith-3_3-trixie-$RELEASE_LABEL.img
 
 if [ -d $CHROOT ]; then
     echo "$CHROOT dir already exists. Aborting."
