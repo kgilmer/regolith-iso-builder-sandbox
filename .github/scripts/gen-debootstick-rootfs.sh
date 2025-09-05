@@ -5,8 +5,8 @@ set -o errexit
 # Configure System
 
 echo "seed" > /etc/hostname
-sudo chmod +x /usr/bin/interactive-setup.sh
-sudo systemctl enable interactive-setup.service
+chmod +x /usr/bin/interactive-setup.sh
+systemctl enable interactive-setup.service
 
 # Base dependencies
 
@@ -29,4 +29,4 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Complete dependency set
 
-DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox-esr gnome-terminal network-manager
+DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade lightdm lightdm-gtk-greeter regolith-lightdm-config regolith-desktop regolith-session-flashback regolith-session-sway regolith-look-lascaille vim firmware-linux firefox-esr gnome-terminal network-manager sudo
