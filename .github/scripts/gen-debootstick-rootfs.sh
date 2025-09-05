@@ -50,6 +50,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
     regolith-look-lascaille \
     regolith-session-flashback \
     regolith-session-sway \
+    rsyslog \
     sudo \
-    vim \
-    zenity
+    vim
