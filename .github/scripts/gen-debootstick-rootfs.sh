@@ -12,7 +12,8 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade --no-install-recomme
     locales \
     pgp \
     systemd \
-    wget
+    wget \
+    whiptail
 
 # Configure System
 
@@ -41,6 +42,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
     firmware-linux \
     gnome-terminal \
     htop \
+    iw \
     less \
     lightdm \
     lightdm-gtk-greeter \
@@ -52,4 +54,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
     regolith-session-sway \
     rsyslog \
     sudo \
-    vim
+    vim \
+    wireless-tools \
+    wpasupplicant
