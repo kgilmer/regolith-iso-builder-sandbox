@@ -1,19 +1,28 @@
 #!/bin/bash
 set -euo pipefail
 
+DRY_RUN=false
+if [[ "${1-}" == "--dry-run" ]]; then
+    DRY_RUN=true
+fi
+
 whiptail --title "One-time Interactive Setup" --msgbox "This system requires initial setup.\n\nYou will be asked for a language, timezone, username, password, and hostname.\n\nAfter which the system will be configured and ready to use." 15 60
+
+if [ "$DRY_RUN" = true ]; then
+    whiptail --title "Dry Run Mode" --msgbox "DRY RUN MODE is active.\n\nNo changes will be made to the system." 10 60
+fi
 
 # Get the user's language
 
-LOCALES=$(locale -a | sort)
-MENU=""
-while read -r loc; do
-    MENU="$MENU \"$loc\" \"$loc\""
-done <<< "$LOCALES"
+mapfile -t LOCALES < <(locale -a | sort)
+MENU_ITEMS=()
+for loc in "${LOCALES[@]}"; do
+    MENU_ITEMS+=("$loc" "$loc")
+done
 
 while true; do
-    SELECTION=$(eval whiptail --title "Select Default Language" --menu "Choose your system language / locale:" 20 60 15 $MENU 3>&1 1>&2 2>&3) || true
-    if [ -n "$SELECTION" ]; then
+    LOCALE_SELECTION=$(whiptail --title "Select Default Language" --menu "Choose your system language / locale:" 30 70 20 "${MENU_ITEMS[@]}" 3>&1 1>&2 2>&3) || true
+    if [ -n "$LOCALE_SELECTION" ]; then
         break
     fi
     whiptail --msgbox "You must select a language/locale to continue." 8 50
@@ -21,14 +30,15 @@ done
 
 # Get the user's timezone
 
-MENU=""
-while read -r tz; do
-    MENU="$MENU \"$tz\" \"$tz\""
-done < <(timedatectl list-timezones)
+mapfile -t TIMEZONES < <(timedatectl list-timezones)
+MENU_ITEMS=()
+for tz in "${TIMEZONES[@]}"; do
+    MENU_ITEMS+=("$tz" "$tz")
+done
 
 while true; do
-    SELECTION=$(eval whiptail --title "Select Timezone" --menu "Choose your timezone:" 20 60 15 $MENU 3>&1 1>&2 2>&3) || true
-    if [ -n "$SELECTION" ]; then
+    TIMEZONE_SELECTION=$(whiptail --title "Select Timezone" --menu "Choose your timezone:" 30 70 20 "${MENU_ITEMS[@]}" 3>&1 1>&2 2>&3) || true
+    if [ -n "$TIMEZONE_SELECTION" ]; then
         break
     fi
     whiptail --msgbox "You must select a timezone to continue." 8 50
@@ -43,27 +53,37 @@ while :; do
     CONFIRM=$(whiptail --passwordbox "Confirm your password:" 10 50 3>&1 1>&2 2>&3) || true
 
     [ "$NEWPASS" == "$CONFIRM" ] && break
-    whiptail --msgbox "Passwords do not match. Please reboot and try again." 8 40
+    whiptail --msgbox "Passwords do not match. Please try again." 8 40
 done
 
-# Set the user's language
-if ! grep -q "^$SELECTION" /etc/locale.gen; then
-    echo "$SELECTION UTF-8" >> /etc/locale.gen
+if [ "$DRY_RUN" = true ]; then
+    echo "Locale: $LOCALE_SELECTION"
+    echo "Timezone: $TIMEZONE_SELECTION"
+    echo "Hostname: $HOSTNAME"
+    echo "New User: $NEWUSER"
+    echo "New Password: $NEWPASS"
+else
+    # Set the user's language
+    if ! grep -q "^$LOCALE_SELECTION" /etc/locale.gen; then
+        echo "$LOCALE_SELECTION UTF-8" >> /etc/locale.gen
+    fi
+
+    locale-gen "$LOCALE_SELECTION"
+    update-locale LANG="$LOCALE_SELECTION"
+
+    # Set the timezone
+    timedatectl set-timezone "$TIMEZONE_SELECTION"
+
+    # Set the hostname
+    hostnamectl set-hostname "$HOSTNAME"
+
+    # Create the user
+    useradd -m -s /bin/bash "$NEWUSER"
+    echo "$NEWUSER:$NEWPASS" | chpasswd
+    usermod -aG sudo "$NEWUSER" || true   # optional: give sudo
+
+    # Disable login by root
+    passwd -l root
+
+    whiptail --title "Setup Complete" --msgbox "Initial setup is complete. The system will now continue to the login screen." 10 60
 fi
-
-locale-gen "$SELECTION"
-update-locale LANG="$SELECTION"
-
-# Set the timezone
-timedatectl set-timezone "$SELECTION"
-
-# Set the hostname
-hostnamectl set-hostname $HOSTNAME
-
-# Create the user
-useradd -m -s /bin/bash "$NEWUSER"
-echo "$NEWUSER:$NEWPASS" | chpasswd
-usermod -aG sudo "$NEWUSER" || true   # optional: give sudo
-
-# Disable login by root
-passwd -l root
