@@ -9,10 +9,13 @@ Type=oneshot
 ExecStart=/usr/bin/interactive-setup.sh
 ExecStartPost=/bin/systemctl disable interactive-setup.service
 
+TimeoutStartSec=0
+TimeoutStopSec=0
+
 StandardInput=tty
 StandardOutput=tty
 StandardError=tty
-TTYPath=/dev/tty1
+TTYPath=/dev/tty8
 
 [Install]
 WantedBy=multi-user.target

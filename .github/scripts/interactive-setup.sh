@@ -1,5 +1,7 @@
 #!/bin/bash
-set -euo pipefail
+set -u
+
+chvt 8
 
 DRY_RUN=false
 if [[ "${1-}" == "--dry-run" ]]; then
@@ -30,11 +32,12 @@ done
 
 # Get the user's timezone
 
-mapfile -t TIMEZONES < <(timedatectl list-timezones)
 MENU_ITEMS=()
-for tz in "${TIMEZONES[@]}"; do
-    MENU_ITEMS+=("$tz" "$tz")
-done
+while read -r tz; do
+    if [ -f "/usr/share/zoneinfo/$tz" ]; then
+        MENU_ITEMS+=("$tz" "$tz")
+    fi
+done < <(timedatectl list-timezones)
 
 while true; do
     TIMEZONE_SELECTION=$(whiptail --title "Select Timezone" --menu "Choose your timezone:" 30 70 20 "${MENU_ITEMS[@]}" 3>&1 1>&2 2>&3) || true
@@ -87,3 +90,5 @@ else
 
     whiptail --title "Setup Complete" --msgbox "Initial setup is complete. The system will now continue to the login screen." 10 60
 fi
+
+chvt 1

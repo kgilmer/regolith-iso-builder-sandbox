@@ -9,6 +9,7 @@ echo "deb https://deb.debian.org/debian trixie main contrib non-free non-free-fi
 apt update
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade --no-install-recommends \
+    kbd \
     locales \
     pgp \
     systemd \
