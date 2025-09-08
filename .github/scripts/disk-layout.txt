@@ -5,4 +5,10 @@ gpt
 partition   /boot/efi  efi     auto
 partition   none       bios    auto
 partition   /mnt/share fat    1G
-partition   /          ext4    max
+partition   none       lvm     max
+
+# lvm volumes (with mountpoint, type, size)
+lvm_volume  /          ext4    max
+
+# lvm volume group name
+lvm_vg_name auto
