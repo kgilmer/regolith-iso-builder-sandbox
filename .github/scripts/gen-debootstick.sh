@@ -22,7 +22,13 @@ if [ -d $CHROOT ]; then
     exit 1
 fi
 
-debootstrap --arch=amd64 --variant=minbase trixie $CHROOT
+debootstrap \
+    --arch=amd64 \
+    --variant=minbase \
+    --include=kbd,locales,gpg,systemd,wget,whiptail \
+    --components=main,contrib,non-free,non-free-firmware \
+    trixie \
+    $CHROOT
 
 # Temporary, package these files (TODO)
 cp ./interactive-setup.sh $CHROOT/usr/bin/
@@ -48,6 +54,9 @@ umount -l $CHROOT/sys || true
 umount -l $CHROOT/dev/pts || true
 umount -l $CHROOT/dev || true
 
-debootstick "$CHROOT" "$TARGET_DIR/$IMAGE_NAME"
+debootstick \
+    --disk-layout disk-layout.txt \
+    "$CHROOT" \
+    "$TARGET_DIR/$IMAGE_NAME"
 
 echo "$TARGET_DIR/$IMAGE_NAME is ready to boot"
