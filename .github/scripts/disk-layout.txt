@@ -4,8 +4,8 @@ gpt
 # ordered list of partitions (with mountpoint, type, size)
 partition   /boot/efi  efi     auto
 partition   none       bios    auto
-partition   /home      ext4    max
 partition   none       lvm     64G
+partition   /home      ext4    max
 
 # lvm volumes (with mountpoint, type, size)
 lvm_volume  /          ext4    64G
