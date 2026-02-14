@@ -15,7 +15,7 @@ if [ -z $RELEASE_LABEL ]; then
 fi
 
 CHROOT="$TARGET_DIR/image-root-$RELEASE_LABEL"
-IMAGE_NAME=regolith-3_3-trixie-$RELEASE_LABEL.img
+IMAGE_NAME=regolith-3_4-debian-13-$RELEASE_LABEL.img
 
 if [ -d $CHROOT ]; then
     echo "$CHROOT dir already exists. Aborting."

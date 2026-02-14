@@ -27,7 +27,7 @@ jobs:
           sudo ./gen-debootstick.sh $RUNNER_TEMP ${{ github.ref_name }}
           set -e
           set -x
-          IMAGE_FILE=$(find $RUNNER_TEMP -maxdepth 1 -name "regolith-3_3-trixie-*.img")
+          IMAGE_FILE=$(find $RUNNER_TEMP -maxdepth 1 -name "regolith-*.img")
           ZIP_FILE_NAME="${IMAGE_FILE}.zip"
           zip -j "$ZIP_FILE_NAME" "$IMAGE_FILE"
           echo "ZIP_FILE=$ZIP_FILE_NAME" >> $GITHUB_ENV
