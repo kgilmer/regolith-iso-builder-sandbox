@@ -35,9 +35,6 @@ wget -qO - https://archive.regolith-desktop.com/regolith.key | gpg --dearmor | t
 # Use the "rolling" release URL to always get the latest release
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://archive.regolith-desktop.com/debian/stable trixie main" > /etc/apt/sources.list.d/regolith.list
  
-# Add experimental repo for special ISO only package regolith-debootstick-setup
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://archive.regolith-desktop.com/debian/experimental trixie main" > /etc/apt/sources.list.d/regolith-exp.list
-
 apt update
  
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
