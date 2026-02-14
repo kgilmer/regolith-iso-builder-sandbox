@@ -35,8 +35,9 @@ echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 wget -qO - https://archive.regolith-desktop.com/regolith.key | gpg --dearmor | tee /usr/share/keyrings/regolith-archive-keyring.gpg > /dev/null
 
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://archive.regolith-desktop.com/debian/unstable trixie main" > /etc/apt/sources.list.d/regolith.list
-
+# Use the "rolling" release URL to always get the latest release
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://archive.regolith-desktop.com/debian/stable trixie main" > /etc/apt/sources.list.d/regolith.list
+ 
 apt update
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
