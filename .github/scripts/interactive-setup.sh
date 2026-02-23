@@ -130,8 +130,11 @@ else
     timedatectl set-timezone "$TIMEZONE_SELECTION"
     timedatectl set-ntp true
 
-    # Set the hostname
-    hostnamectl set-hostname "$HOSTNAME"
+    # Set the hostname in both runtime and persistent config.
+    # Avoid depending solely on hostnamectl/dbus timing this early in boot.
+    printf '%s\n' "$HOSTNAME" > /etc/hostname
+    hostname "$HOSTNAME"
+    hostnamectl set-hostname "$HOSTNAME" --static || true
     if grep -qE '^127\.0\.1\.1[[:space:]]+' /etc/hosts; then
         sed -ri "s|^127\\.0\\.1\\.1[[:space:]]+.*$|127.0.1.1\t${HOSTNAME}|" /etc/hosts
     else
