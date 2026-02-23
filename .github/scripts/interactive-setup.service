@@ -3,11 +3,11 @@ Description=Interactive System Setup
 DefaultDependencies=no
 After=systemd-user-sessions.service systemd-logind.service
 Before=getty.target display-manager.service
+ConditionPathExists=!/var/lib/interactive-setup.done
 
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/interactive-setup.sh
-ExecStartPost=/bin/systemctl disable interactive-setup.service
 
 TimeoutStartSec=0
 TimeoutStopSec=0
