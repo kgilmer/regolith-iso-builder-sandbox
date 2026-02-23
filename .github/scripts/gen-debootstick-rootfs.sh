@@ -25,6 +25,14 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
     wireless-tools \
     wpasupplicant
 
+# Brand GRUB menu entries in the installed target system.
+# This changes entries like "Debian GNU/Linux" to "Regolith Linux".
+if [ -f /etc/default/grub ] && grep -q '^GRUB_DISTRIBUTOR=' /etc/default/grub; then
+    sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="Regolith Linux"/' /etc/default/grub
+else
+    echo 'GRUB_DISTRIBUTOR="Regolith Linux"' >> /etc/default/grub
+fi
+
 # Enable first-boot system configuration
 
 chmod +x /usr/bin/interactive-setup.sh
