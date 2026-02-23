@@ -4,12 +4,21 @@ on:
   push:
     tags:
       - 'v*'     # (optional) only tags starting with "v"
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
 
 permissions:
   contents: write
 
 jobs:
   build:
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.author_association == 'OWNER')
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -24,7 +33,12 @@ jobs:
         id: build_image
         working-directory: .github/scripts
         run: |
-          sudo ./gen-debootstick.sh $RUNNER_TEMP ${{ github.ref_name }}
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            RELEASE_LABEL="${{ github.ref_name }}"
+          else
+            RELEASE_LABEL="pr-${{ github.event.pull_request.number }}-${GITHUB_SHA::7}"
+          fi
+          sudo ./gen-debootstick.sh "$RUNNER_TEMP" "$RELEASE_LABEL"
           set -e
           set -x
           IMAGE_FILE=$(find $RUNNER_TEMP -maxdepth 1 -name "regolith-*.img")
@@ -33,12 +47,20 @@ jobs:
           echo "ZIP_FILE=$ZIP_FILE_NAME" >> $GITHUB_ENV
 
       - name: Release
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           name: "Regolith ISO Build ${{ github.ref_name }}"
           tag_name: ${{ github.ref_name }}
           files: |
             ${{ env.ZIP_FILE }}
+
+      - name: Upload PR artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: regolith-image-pr-${{ github.event.pull_request.number }}
+          path: ${{ env.ZIP_FILE }}
 defaults:
   run:
     shell: bash
