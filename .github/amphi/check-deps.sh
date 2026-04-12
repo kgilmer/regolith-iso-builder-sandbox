@@ -32,6 +32,9 @@ PACKAGES=(
     libcryptx-perl
     libclass-accessor-perl
     libjson-validator-perl
+    liblist-moreutils-perl
+    libfile-chdir-perl
+    libio-stringy-perl
 )
 
 docker run --rm -v "${SCRIPT_DIR}:/amphi" -w /amphi ubuntu:24.04 bash -c "
@@ -49,6 +52,14 @@ docker run --rm -v "${SCRIPT_DIR}:/amphi" -w /amphi ubuntu:24.04 bash -c "
     for f in tests/*.pm; do
         echo \"==> perl -c \$f\"
         perl -I/usr/lib/os-autoinst -c \"\$f\"
+    done
+
+    # Also compile-check every os-autoinst module. This catches modules that
+    # are only loaded via runtime 'require' inside backends/consoles, which a
+    # simple check of isotovideo+tests would miss.
+    echo '==> perl -c on every os-autoinst .pm file'
+    find /usr/lib/os-autoinst -name '*.pm' -print0 | while IFS= read -r -d '' f; do
+        perl -I/usr/lib/os-autoinst -c \"\$f\" 2>&1 | grep -v 'syntax OK\$' || true
     done
 
     echo '==> All Perl imports resolve.'

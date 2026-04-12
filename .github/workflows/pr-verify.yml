@@ -64,7 +64,10 @@ jobs:
             libnet-ssh2-perl \
             libcryptx-perl \
             libclass-accessor-perl \
-            libjson-validator-perl
+            libjson-validator-perl \
+            liblist-moreutils-perl \
+            libfile-chdir-perl \
+            libio-stringy-perl
 
       - name: Download image artifact
         uses: actions/download-artifact@v4
@@ -117,7 +120,10 @@ jobs:
             libnet-ssh2-perl \
             libcryptx-perl \
             libclass-accessor-perl \
-            libjson-validator-perl
+            libjson-validator-perl \
+            liblist-moreutils-perl \
+            libfile-chdir-perl \
+            libio-stringy-perl
 
       - name: Download image artifact
         uses: actions/download-artifact@v4
