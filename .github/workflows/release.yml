@@ -47,7 +47,27 @@ jobs:
         run: sudo chmod 666 /dev/kvm
 
       - name: Install test dependencies
-        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --install-recommends \
+            os-autoinst ovmf qemu-system-x86 \
+            libtime-moment-perl \
+            libmojolicious-perl \
+            libmojo-ioloop-readwriteprocess-perl \
+            libyaml-pp-perl \
+            libipc-run-perl \
+            libxml-libxml-perl \
+            libfile-which-perl \
+            libdata-dump-perl \
+            libcarp-always-perl \
+            libnet-dbus-perl \
+            libnet-ssh2-perl \
+            libcryptx-perl \
+            libclass-accessor-perl \
+            libjson-validator-perl \
+            liblist-moreutils-perl \
+            libfile-chdir-perl \
+            libio-stringy-perl
 
       - name: Download image artifact
         uses: actions/download-artifact@v4
@@ -83,7 +103,27 @@ jobs:
         run: sudo chmod 666 /dev/kvm
 
       - name: Install test dependencies
-        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --install-recommends \
+            os-autoinst ovmf qemu-system-x86 \
+            libtime-moment-perl \
+            libmojolicious-perl \
+            libmojo-ioloop-readwriteprocess-perl \
+            libyaml-pp-perl \
+            libipc-run-perl \
+            libxml-libxml-perl \
+            libfile-which-perl \
+            libdata-dump-perl \
+            libcarp-always-perl \
+            libnet-dbus-perl \
+            libnet-ssh2-perl \
+            libcryptx-perl \
+            libclass-accessor-perl \
+            libjson-validator-perl \
+            liblist-moreutils-perl \
+            libfile-chdir-perl \
+            libio-stringy-perl
 
       - name: Download image artifact
         uses: actions/download-artifact@v4
