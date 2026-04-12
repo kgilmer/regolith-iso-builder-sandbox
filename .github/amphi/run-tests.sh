@@ -81,4 +81,24 @@ echo "    Disk image:  ${DISK_IMAGE}"
 echo "    Needles dir: ${NEEDLES_DIR}"
 echo "    Results:     ${SCRIPT_DIR}/testresults/"
 cd "${SCRIPT_DIR}"
-exec isotovideo
+isotovideo || true
+
+# isotovideo exits 0 even when tests fail — it reports outcome via result JSONs.
+# Scan them and exit non-zero if any test did not pass so CI fails correctly.
+shopt -s nullglob
+failed=()
+results=("${SCRIPT_DIR}"/testresults/result-*.json)
+if [[ ${#results[@]} -eq 0 ]]; then
+    echo "ERROR: no test result files found in testresults/" >&2
+    exit 1
+fi
+for r in "${results[@]}"; do
+    if grep -qE '"result"[[:space:]]*:[[:space:]]*"(fail|softfail)"' "$r"; then
+        failed+=("$(basename "$r")")
+    fi
+done
+if [[ ${#failed[@]} -gt 0 ]]; then
+    echo "==> Test failures: ${failed[*]}" >&2
+    exit 1
+fi
+echo "==> All tests passed."
