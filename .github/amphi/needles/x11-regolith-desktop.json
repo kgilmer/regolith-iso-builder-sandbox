@@ -1,0 +1,1 @@
+{"area":[{"type":"match","xpos":75,"ypos":155,"width":490,"height":200,"match":85},{"type":"match","xpos":0,"ypos":598,"width":100,"height":26,"match":90},{"type":"exclude","xpos":400,"ypos":598,"width":624,"height":26}],"tags":["x11-regolith-desktop"],"properties":[]}

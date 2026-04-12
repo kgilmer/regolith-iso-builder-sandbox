@@ -1,0 +1,20 @@
+# Disk images (large, not version-controlled)
+*.img
+*.fd
+
+# Runtime / isotovideo artifacts
+vars.json
+testresults/
+raid/
+video.webm
+video_time.vtt
+serial0
+*.pid
+*.log
+autoinst-status.json
+qemu_state.json
+command-server-tmp/
+qemuscreenshot/
+results/
+working.img
+backend.run

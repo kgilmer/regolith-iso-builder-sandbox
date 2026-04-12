@@ -1,0 +1,1 @@
+{"area":[{"type":"match","xpos":0,"ypos":598,"width":100,"height":26,"match":90},{"type":"match","xpos":0,"ypos":0,"width":1024,"height":595,"match":85},{"type":"exclude","xpos":400,"ypos":598,"width":624,"height":26}],"tags":["regolith-desktop-clean"],"properties":[]}

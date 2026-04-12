@@ -1,0 +1,1 @@
+{"area":[{"type":"match","xpos":315,"ypos":310,"width":410,"height":30,"match":90},{"type":"exclude","xpos":315,"ypos":345,"width":410,"height":40}],"tags":["setup-hostname"],"properties":[]}

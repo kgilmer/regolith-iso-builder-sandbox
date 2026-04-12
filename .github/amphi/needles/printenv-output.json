@@ -1,0 +1,1 @@
+{"area":[{"type":"match","xpos":0,"ypos":0,"width":900,"height":560,"match":75},{"type":"exclude","xpos":0,"ypos":740,"width":1024,"height":28}],"tags":["printenv-output"],"properties":[]}

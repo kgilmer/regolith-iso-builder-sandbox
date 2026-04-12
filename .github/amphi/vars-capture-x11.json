@@ -1,0 +1,19 @@
+{
+  "CASEDIR": "@CASEDIR@",
+  "NEEDLES_DIR": "@NEEDLES_DIR@",
+  "SCHEDULE": "tests/capture_screenshots_x11",
+  "HDD_1": "@HDD_1@",
+  "UEFI": "1",
+  "UEFI_PFLASH_CODE": "/usr/share/OVMF/OVMF_CODE_4M.fd",
+  "UEFI_PFLASH_VARS": "@UEFI_PFLASH_VARS@",
+  "QEMURAM": "4096",
+  "QEMUCPUS": "2",
+  "VNC": "91",
+  "WORKER_ID": "1",
+  "DISTRI": "regolith",
+  "VERSION": "3.4",
+  "ARCH": "x86_64",
+  "FLAVOR": "default",
+  "BUILD": "1",
+  "QEMU_APPEND": "-display gtk,zoom-to-fit=on"
+}

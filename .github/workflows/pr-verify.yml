@@ -1,0 +1,112 @@
+name: PR Verification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event.pull_request.author_association == 'OWNER'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y debootstrap debootstick
+
+      - name: Build image
+        working-directory: .github/scripts
+        run: |
+          RELEASE_LABEL="pr-${{ github.event.pull_request.number }}-${GITHUB_SHA::7}"
+          sudo ./gen-debootstick.sh "$RUNNER_TEMP" "$RELEASE_LABEL"
+          IMAGE_FILE=$(find "$RUNNER_TEMP" -maxdepth 1 -name "regolith-*.img")
+          echo "IMAGE_FILE=$IMAGE_FILE" >> "$GITHUB_ENV"
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: regolith-image
+          path: ${{ env.IMAGE_FILE }}
+          retention-days: 1
+
+  test-x11:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable KVM
+        run: sudo chmod 666 /dev/kvm
+
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: regolith-image
+          path: .
+
+      - name: Run X11 tests
+        working-directory: .github/amphi
+        run: |
+          IMAGE_FILE=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -name "regolith-*.img")
+          ./run-tests.sh x11 "$IMAGE_FILE"
+
+      - name: Upload X11 test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-x11
+          path: |
+            .github/amphi/testresults/
+            .github/amphi/video.webm
+            .github/amphi/autoinst-status.json
+
+  test-wayland:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable KVM
+        run: sudo chmod 666 /dev/kvm
+
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86
+
+      - name: Download image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: regolith-image
+          path: .
+
+      - name: Run Wayland tests
+        working-directory: .github/amphi
+        run: |
+          IMAGE_FILE=$(find "$GITHUB_WORKSPACE" -maxdepth 1 -name "regolith-*.img")
+          ./run-tests.sh wayland "$IMAGE_FILE"
+
+      - name: Upload Wayland test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-wayland
+          path: |
+            .github/amphi/testresults/
+            .github/amphi/video.webm
+            .github/amphi/autoinst-status.json
+
+defaults:
+  run:
+    shell: bash
