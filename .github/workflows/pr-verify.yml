@@ -47,7 +47,7 @@ jobs:
         run: sudo chmod 666 /dev/kvm
 
       - name: Install test dependencies
-        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86
+        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86 libtime-moment-perl
 
       - name: Download image artifact
         uses: actions/download-artifact@v4
@@ -83,7 +83,7 @@ jobs:
         run: sudo chmod 666 /dev/kvm
 
       - name: Install test dependencies
-        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86
+        run: sudo apt-get update && sudo apt-get install -y os-autoinst ovmf qemu-system-x86 libtime-moment-perl
 
       - name: Download image artifact
         uses: actions/download-artifact@v4
