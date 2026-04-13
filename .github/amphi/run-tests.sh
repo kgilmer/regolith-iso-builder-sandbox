@@ -84,7 +84,14 @@ cd "${SCRIPT_DIR}"
 isotovideo || true
 
 # isotovideo exits 0 even when tests fail — it reports outcome via result JSONs.
-# Scan them and exit non-zero if any test did not pass so CI fails correctly.
+# Inspect the top-level .result of each test JSON and exit non-zero on any
+# non-ok verdict. Must read only the top-level key: nested per-region "result"
+# entries can be "fail" during retry paths (e.g. send_key_until_needlematch)
+# even when the test ultimately succeeds.
+if ! command -v jq &>/dev/null; then
+    echo "ERROR: jq is required to evaluate test results" >&2
+    exit 1
+fi
 shopt -s nullglob
 failed=()
 results=("${SCRIPT_DIR}"/testresults/result-*.json)
@@ -93,8 +100,10 @@ if [[ ${#results[@]} -eq 0 ]]; then
     exit 1
 fi
 for r in "${results[@]}"; do
-    if grep -qE '"result"[[:space:]]*:[[:space:]]*"(fail|softfail)"' "$r"; then
-        failed+=("$(basename "$r")")
+    status=$(jq -r '.result // "missing"' "$r")
+    echo "    $(basename "$r"): ${status}"
+    if [[ "${status}" != "ok" ]]; then
+        failed+=("$(basename "$r"):${status}")
     fi
 done
 if [[ ${#failed[@]} -gt 0 ]]; then
