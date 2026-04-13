@@ -23,8 +23,8 @@ sub run {
     assert_screen('x11-regolith-desktop-clean', 30);
 
     # ── Open terminal ─────────────────────────────────────────────────────────
-    send_key('super-ret');
-    assert_screen('x11-terminal-open', 30);
+    # First super-ret after overlay dismiss is sometimes dropped by i3; retry.
+    send_key_until_needlematch('x11-terminal-open', 'super-ret', 3, 5);
 }
 
 sub test_flags { return { fatal => 1 }; }
