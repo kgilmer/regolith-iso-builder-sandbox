@@ -9,7 +9,6 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
     firmware-ath9k-htc \
     firmware-iwlwifi \
     firmware-linux \
-    firmware-linux-nonfree \
     firmware-realtek \
     gnome-terminal \
     htop \

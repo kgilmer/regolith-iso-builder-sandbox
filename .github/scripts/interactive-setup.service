@@ -19,4 +19,3 @@ TTYPath=/dev/tty8
 
 [Install]
 WantedBy=multi-user.target
-WantedBy=display-manager.service
