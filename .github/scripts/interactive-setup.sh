@@ -8,7 +8,7 @@ if [[ "${1-}" == "--dry-run" ]]; then
     DRY_RUN=true
 fi
 
-whiptail --title "One-time Interactive Setup" --msgbox "This system requires initial setup.\n\nYou will be asked for a language, timezone, username, password, and hostname.\n\nAfter which the system will be configured and ready to use." 15 60
+whiptail --title "One-time Interactive Setup" --msgbox "Initial Setup\n\nYou will be asked for a language, timezone, username, password, and hostname.\n\nAfter which the system will be configured and ready to use." 15 60
 
 if [ "$DRY_RUN" = true ]; then
     whiptail --title "Dry Run Mode" --msgbox "DRY RUN MODE is active.\n\nNo changes will be made to the system." 10 60
