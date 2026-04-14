@@ -14,7 +14,7 @@ if [ "$DRY_RUN" = true ]; then
     whiptail --title "Dry Run Mode" --msgbox "DRY RUN MODE is active.\n\nNo changes will be made to the system." 10 60
 fi
 
-# Get the user's language
+# Get the target system language
 
 mapfile -t LOCALES < <(locale -a | sort)
 MENU_ITEMS=()
