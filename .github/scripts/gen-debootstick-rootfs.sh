@@ -24,13 +24,13 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --upgrade \
     wireless-tools \
     wpasupplicant
 
-# Brand GRUB menu entries in the installed target system.
-# This changes entries like "Debian GNU/Linux" to "Regolith Linux".
-if [ -f /etc/default/grub ] && grep -q '^GRUB_DISTRIBUTOR=' /etc/default/grub; then
-    sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="Regolith Linux"/' /etc/default/grub
-else
-    echo 'GRUB_DISTRIBUTOR="Regolith Linux"' >> /etc/default/grub
-fi
+# Brand GRUB menu entries. Drop-in is sourced by grub-mkconfig after
+# /etc/default/grub, so it overrides the package default without fighting
+# dpkg over the conffile.
+mkdir -p /etc/default/grub.d
+cat > /etc/default/grub.d/99-regolith.cfg <<'EOF'
+GRUB_DISTRIBUTOR="Regolith Linux"
+EOF
 
 # Enable first-boot system configuration
 
